@@ -2,7 +2,8 @@
   <div class="header-container">
     <div class = "hamburger" @click="appStore.CollapseMenu">
       <el-icon :size="25" >
-        <Expand />
+        <Expand v-if="!appStore.isCollapse" />
+        <Fold v-else />
       </el-icon>
     </div>
     <div class="right-content">

@@ -8,7 +8,7 @@
   >
     <div id="title">
       <img src="../assets/images/1.png" alt="">
-      <span>欢迎你，管理员！</span>
+      <span v-if="!appStore.isCollapse">欢迎你，管理员！</span>
     </div>
     <!--引入递给菜单组件-->
     <CommonMenu
