@@ -9,7 +9,7 @@ const MenuData = {data:[
         id:"2",
         path: '/mall',
         name: '商品管理',
-        icon: 'Goods',
+        icon: 'GoodsFilled',
         children: [
             {
                 id:"22",
@@ -30,13 +30,13 @@ const MenuData = {data:[
         id:"3",
         path: '/user',
         name: '用户管理',
-        icon: 'User'
+        icon: 'UserFilled'
     },
     {
         id:"4",
         name: '其他',
         path: '/other',
-        icon: 'CollectionTag',
+        icon: 'Share',
         children: [
             {
                 id:"",
