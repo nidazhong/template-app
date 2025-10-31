@@ -1,14 +1,14 @@
 <template>
   <div class="login-container">
     <div id="login-card">
-      <!--扫码-->
+      <!--扫码登录区域-->
       <div class="left-area">
         <div class="left-title">扫码登录</div>
         <div class="qrcode-img">
           <img src="../assets/images/qc.png" alt="" sizes="" srcset="">
         </div>
       </div>
-      <!--登录-->
+      <!--输入登录区域-->
       <div class="right-area">
         <div class="right-title">Login</div>
         <div class="login-form">
@@ -34,12 +34,7 @@
             <el-form-item >
               <el-input class="content-code" :prefix-icon="Promotion" placeholder="请输入验证码" >
                 <template #suffix>
-                  <captcha-code
-                      :width="80"
-                      :height="28"
-                      @change="onCaptchaChange"
-                      style="margin-right: -8px; cursor: pointer;"
-                  />
+                  <captcha-code class="captcha-code-main" @change="onCaptchaChange"/>
                 </template>
               </el-input>
             </el-form-item>
@@ -165,6 +160,8 @@ const doLogin = () =>{
       width: 100%;      // 使用百分比，更灵活
       height: 100%;
     }
+
+
   }
 }
 
@@ -234,6 +231,14 @@ const doLogin = () =>{
     .el-form {
       max-width: 600px;
       margin-top: 30px;
+
+      // 图形二维码
+      .captcha-code-main {
+        width:80px;
+        height:28px;
+        margin-right: -5px;
+        cursor:pointer;
+      }
     }
 
     /*输入框*/
