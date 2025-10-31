@@ -15,26 +15,26 @@
           <!--登录模式-->
           <div class="login-form_switch">
             <span class="login-form_model"
-                  :class="{ 'active': loginType === 'username' }"
+                  :class="{ 'active': state.loginType === 'username' }"
                   @click="switchLoginType('username')">用户名登录</span>
             <span class="login-form_model"
-                  :class="{ 'active': loginType === 'phone' }"
+                  :class="{ 'active': state.loginType === 'phone' }"
                   @click="switchLoginType('phone')">短信登录</span>
             <!-- 动态下划线指示器 -->
-            <div class="indicator" :class="loginType"></div>
+            <div class="indicator" :class="state.loginType"></div>
           </div>
           <!--用户名登录的表单-->
-          <el-form  v-if="loginType === 'username'" :model="userForm"  :rules="userRules" ref="userLoginFormRef">
+          <el-form  v-if="state.loginType === 'username'" :model="state.user"  :rules="state.userRules" ref="userLoginFormRef">
             <el-form-item prop="username">
-              <el-input   prefix-icon="User" v-model="userForm.username" placeholder="请输入账号" />
+              <el-input   prefix-icon="User" v-model="state.user.username" placeholder="请输入账号" />
             </el-form-item>
             <el-form-item prop="password">
-              <el-input   type="password" :prefix-icon="Lock"  v-model="userForm.password"  placeholder="请输入密码" />
+              <el-input   type="password" :prefix-icon="Lock"  v-model="state.user.password"  placeholder="请输入密码" />
             </el-form-item>
             <el-form-item >
               <el-input class="content-code" :prefix-icon="Promotion" placeholder="请输入验证码" >
                 <template #suffix>
-                  <captcha-code class="captcha-code-main" @change="onCaptchaChange"/>
+                  <captcha-code class="captcha-code-main" @click="onCaptchaChange"/>
                 </template>
               </el-input>
             </el-form-item>
@@ -43,29 +43,29 @@
             </el-form-item>
           </el-form>
           <!--手机号登录的表单-->
-          <el-form  v-if="loginType === 'phone'" :model="phoneForm" :rules="phoneRules">
+          <el-form  v-if="state.loginType === 'phone'" :model="state.user" :rules="state.phoneRules">
             <el-form-item prop="phone">
-              <el-input   prefix-icon="Phone" v-model="phoneForm.phone"  placeholder="请输入手机号" />
+              <el-input   prefix-icon="Phone" v-model="state.user.phone"  placeholder="请输入手机号" />
             </el-form-item>
             <el-form-item prop="smsCode" >
-              <el-input class="content-code" :prefix-icon="Message" v-model="phoneForm.smsCode" placeholder="请输入验证码" >
+              <el-input class="content-code" :prefix-icon="Message" v-model="state.user.smsCode" placeholder="请输入验证码" >
                 <!-- #suffix后缀插槽 -->
                 <template #suffix>
                   <el-button
                       link
                       type="primary"
-                      :disabled="countdown > 0"
+                      :disabled="state.countdown > 0"
                       @click="getSMS"
                       class="captcha-btn"
                   >
-                    {{ countdown > 0 ? `${countdown}s后重新获取` : '获取验证码' }}
+                    {{ state.countdown > 0 ? `${state.countdown}s后重新获取` : '获取验证码' }}
                   </el-button>
                 </template>
               </el-input>
               <span class="content-code_img"></span>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :loading="loading" @click="doLogin" >登录</el-button>
+              <el-button type="primary" :loading="state.loading" @click="doLogin" >登录</el-button>
             </el-form-item>
           </el-form>
           <div class="tip-msg">* 温馨提示：建议使用谷歌、Microsoft Edge，版本 79.0.1072.62 及以上浏览器，360浏览器请使用极速模式</div>
@@ -77,56 +77,51 @@
 <script setup>
 // 引入图标
 import {Lock,Promotion,Message } from '@element-plus/icons-vue'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import CaptchaCode from 'vue-captcha-code' // 模拟图形验证码，实际后端获取
 import { ElMessage } from 'element-plus'
 
-
-
-
-const loginType = ref('username') // 默认选择用户名登录模式
-const userLoginFormRef = ref()
-const countdown = ref(0) // 获取手机短信验证码的默认值
-const captchaValue = ref('')
-const loading = ref(false)  // 登录状态
-
-
-
-// :model 绑定的数据对象
-const userForm = reactive({
-  username: '',
-  password: ''
+// 常用ref > reactive
+// ref 在模版中不需要.value Vue会自动解包 ，在js中需要
+// 统一默认配置
+const state = ref({
+  loginType: 'username', // 默认选择用户名登录模式
+  countdown: 0, // 获取手机短信验证码的默认值
+  loading: false, // 登录状态
+  user:{
+    username: '',
+    password: '',
+    phone: '',
+    smsCode: ''
+  },
+  userRules : {
+    username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+    password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+  },
+  phoneRules: {
+    phone: [
+      { required: true, message: '请输入手机号', trigger: 'blur' },
+      { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
+    ],
+    smsCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+  }
 })
 
-const phoneForm = reactive({
-  phone: '',
-  smsCode: ''
-})
+// js部分 ref访问要带上.value
+const userLoginFormRef = ref() // DOM/组件引用必须用 ref()
 
-// 验证规则
-const userRules = {
-  username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
-}
 
-const phoneRules = {
-  phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
-  ],
-  smsCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
-}
 
 // 使用方法处理点击事件
 const switchLoginType = (type) => {
-  loginType.value = type
+  state.value.loginType = type
   // 可以在这里添加其他逻辑
   // todo 切换逻辑
 }
 
 // 图形验证码
 const onCaptchaChange = (code) => {
-  captchaValue.value = code
+  console.log('验证码变化:', code)
 }
 
 /**
@@ -137,10 +132,10 @@ const getSMS = () => {
   console.log('获取验证码')
 
   // 开始倒计时
-  countdown.value = 60
+  state.value.countdown = 60
   const timer = setInterval(() => {
-    countdown.value--
-    if (countdown.value <= 0) {
+    state.countdown --
+    if (state.countdown <= 0) {
       clearInterval(timer)
     }
   }, 1000)
@@ -160,7 +155,7 @@ const doLogin = async () =>{
     // }
 
     // 执行登录Api请求
-    loading.value = true
+    state.loading = true
     // await loginAPI(loginForm)
     ElMessage.success('登录成功')
 
@@ -169,7 +164,7 @@ const doLogin = async () =>{
       ElMessage.error(error.message || '登录失败')
     }
   } finally {
-    loading.value = false
+    state.loading = false
   }
 }
 </script>
