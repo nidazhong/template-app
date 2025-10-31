@@ -4,9 +4,9 @@ import Mock from "mockjs";
 // 模拟用户数
 Mock.mock('/user/login', 'post', {
     code: 200,
-    message: '登录成功',
     data: {
         token: Mock.Random.guid(),
+        message: '登录成功',
         userInfo: {
             id: Mock.Random.id(),
             username: 'admin',
@@ -23,6 +23,14 @@ Mock.mock('/user/info', 'get', {
         username: 'admin',
         email: 'admin@example.com',
         roles: ['admin']
+    }
+})
+
+// 拦截登出
+Mock.mock('/user/logout', 'logout', {
+    code: 200,
+    data: {
+        message: '已退出登录'
     }
 })
 

@@ -7,7 +7,7 @@
       </el-icon>
     </div>
     <div class="right-content">
-      <el-dropdown>
+      <el-dropdown @command="doClick">
         <span class="el-dropdown-link">
           <el-icon class="el-icon--right"  :size="25" >
             <SwitchButton />
@@ -15,8 +15,8 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>最近登录</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item command="recently">最近登录</el-dropdown-item>
+            <el-dropdown-item command="cancel">退出</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -25,10 +25,24 @@
   </div>
 </template>
 <script setup>
+import router from "@/router/index.js";
 import { useAppStore } from '@/stores/app'
+import { logout,login } from '@/api/user'; // 导入 API 方法
+import { ElMessage } from 'element-plus'
+
 
 const appStore = useAppStore()
-
+const doClick =  async (command) => {
+  if (command === 'cancel') {
+    // 演示请求后端做一些后端清理记录工作
+    const response = await login({"id":"aa"})
+    // 清除token
+    localStorage.removeItem("token")
+    ElMessage.success('已退出')
+    // 跳转登录页面
+    router.push("/login")
+  }
+}
 </script>
 <style lang="less" scoped>
 .header-container {

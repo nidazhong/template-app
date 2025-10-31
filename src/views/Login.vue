@@ -155,10 +155,10 @@ const doLogin = async () =>{
     // 执行登录Api请求，获取token存放，跳转/home
     // 从定义的data中拿数据，而不是表单引用
     const response = await login(data.value.user) // api/user.ts
-    console.log(response)
+    console.log(response.data.userInfo.username + " 已登录...")
     // 导航守卫
     data.loading = true
-    localStorage.setItem("token","cd424cdsac134243fdsacsa")
+    localStorage.setItem("token",response.data.token)
     ElMessage.success('登录成功')
     // 跳转首页
     router.push("/home")

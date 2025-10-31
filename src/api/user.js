@@ -18,3 +18,12 @@ export function login(data) {
     });
 }
 
+export function logout(data) {
+    return request({
+        url: '/user/logout',
+        method: 'post',
+        data: data // 请求体数据
+    });
+}
+
+
