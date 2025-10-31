@@ -81,6 +81,7 @@ import { ref } from 'vue'
 import CaptchaCode from 'vue-captcha-code' // 模拟图形验证码，实际后端获取
 import { ElMessage } from 'element-plus'
 import router from "@/router/index.js";
+import { getUserInfo, login } from '@/api/user'; // 导入 API 方法
 
 // 统一数据管理
 // 常用ref > reactive
@@ -148,23 +149,19 @@ const getSMS = () => {
 //
 const doLogin = async () =>{
   try {
-    // 验证表单
+    // 验证表单 & 验证码
     await userLoginFormRef.value.validate()
 
-    // 2. 验证验证码
-    // if (userForm.captcha.toLowerCase() !== captchaValue.value.toLowerCase()) {
-    //   ElMessage.error('验证码错误')
-    //   return
-    // }
-
     // 执行登录Api请求，获取token存放，跳转/home
-    // await loginAPI(loginForm)
+    // 从定义的data中拿数据，而不是表单引用
+    const response = await login(data.value.user) // api/user.ts
+    console.log(response)
     // 导航守卫
     data.loading = true
     localStorage.setItem("token","cd424cdsac134243fdsacsa")
     ElMessage.success('登录成功')
-    router.push("/home") // 跳转首页
-
+    // 跳转首页
+    router.push("/home")
   } catch (error) {
     if (error instanceof Error) {
       ElMessage.error(error.message || '登录失败')

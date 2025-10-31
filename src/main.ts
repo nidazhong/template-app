@@ -32,6 +32,11 @@ router.beforeEach((to, from, next) => {
     }
 })
 
+
+// 引入mock文件
+import './mock/index.js' // mock 方式，正式发布时，注释掉该处即可
+
+
 app.use(ElementPlus)
 app.use(router)
 app.use(pinia)
