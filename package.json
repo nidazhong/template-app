@@ -21,6 +21,7 @@
     "less-loader": "^12.3.0",
     "pinia": "^2.3.1",
     "vue": "^3.5.22",
+    "vue-captcha-code": "^1.0.2",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
