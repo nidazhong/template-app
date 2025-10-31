@@ -24,12 +24,12 @@
             <div class="indicator" :class="loginType"></div>
           </div>
           <!--用户名登录的表单-->
-          <el-form  v-if="loginType === 'username'">
-            <el-form-item >
-              <el-input   prefix-icon="User" placeholder="请输入账号" />
+          <el-form  v-if="loginType === 'username'" :model="userForm"  :rules="userRules" ref="userLoginFormRef">
+            <el-form-item prop="username">
+              <el-input   prefix-icon="User" v-model="userForm.username" placeholder="请输入账号" />
             </el-form-item>
-            <el-form-item >
-              <el-input   type="password" :prefix-icon="Lock" placeholder="请输入密码" />
+            <el-form-item prop="password">
+              <el-input   type="password" :prefix-icon="Lock"  v-model="userForm.password"  placeholder="请输入密码" />
             </el-form-item>
             <el-form-item >
               <el-input class="content-code" :prefix-icon="Promotion" placeholder="请输入验证码" >
@@ -43,12 +43,12 @@
             </el-form-item>
           </el-form>
           <!--手机号登录的表单-->
-          <el-form  v-if="loginType === 'phone'">
-            <el-form-item >
-              <el-input   prefix-icon="Phone" placeholder="请输入手机号" />
+          <el-form  v-if="loginType === 'phone'" :model="phoneForm" :rules="phoneRules">
+            <el-form-item prop="phone">
+              <el-input   prefix-icon="Phone" v-model="phoneForm.phone"  placeholder="请输入手机号" />
             </el-form-item>
-            <el-form-item >
-              <el-input class="content-code" :prefix-icon="Message" placeholder="请输入验证码" >
+            <el-form-item prop="smsCode" >
+              <el-input class="content-code" :prefix-icon="Message" v-model="phoneForm.smsCode" placeholder="请输入验证码" >
                 <!-- #suffix后缀插槽 -->
                 <template #suffix>
                   <el-button
@@ -65,7 +65,7 @@
               <span class="content-code_img"></span>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="doLogin">登录</el-button>
+              <el-button type="primary" :loading="loading" @click="doLogin" >登录</el-button>
             </el-form-item>
           </el-form>
           <div class="tip-msg">* 温馨提示：建议使用谷歌、Microsoft Edge，版本 79.0.1072.62 及以上浏览器，360浏览器请使用极速模式</div>
@@ -77,14 +77,45 @@
 <script setup>
 // 引入图标
 import {Lock,Promotion,Message } from '@element-plus/icons-vue'
+import { reactive, ref } from 'vue'
+import CaptchaCode from 'vue-captcha-code' // 模拟图形验证码，实际后端获取
+import { ElMessage } from 'element-plus'
 
-import { ref } from 'vue'
 
-// 默认选择用户名登录
-const loginType = ref('username')
-// 获取手机短信验证码的默认值
-const countdown = ref(0)
 
+
+const loginType = ref('username') // 默认选择用户名登录模式
+const userLoginFormRef = ref()
+const countdown = ref(0) // 获取手机短信验证码的默认值
+const captchaValue = ref('')
+const loading = ref(false)  // 登录状态
+
+
+
+// :model 绑定的数据对象
+const userForm = reactive({
+  username: '',
+  password: ''
+})
+
+const phoneForm = reactive({
+  phone: '',
+  smsCode: ''
+})
+
+// 验证规则
+const userRules = {
+  username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+}
+
+const phoneRules = {
+  phone: [
+    { required: true, message: '请输入手机号', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
+  ],
+  smsCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+}
 
 // 使用方法处理点击事件
 const switchLoginType = (type) => {
@@ -93,11 +124,7 @@ const switchLoginType = (type) => {
   // todo 切换逻辑
 }
 
-// 模拟图形验证码，实际后端获取
-import CaptchaCode from 'vue-captcha-code'
-
-const captchaValue = ref('')
-
+// 图形验证码
 const onCaptchaChange = (code) => {
   captchaValue.value = code
 }
@@ -121,8 +148,29 @@ const getSMS = () => {
 
 
 //
-const doLogin = () =>{
-  console.log("开始请求登录")
+const doLogin = async () =>{
+  try {
+    // 验证表单
+    await userLoginFormRef.value.validate()
+
+    // 2. 验证验证码
+    // if (userForm.captcha.toLowerCase() !== captchaValue.value.toLowerCase()) {
+    //   ElMessage.error('验证码错误')
+    //   return
+    // }
+
+    // 执行登录Api请求
+    loading.value = true
+    // await loginAPI(loginForm)
+    ElMessage.success('登录成功')
+
+  } catch (error) {
+    if (error instanceof Error) {
+      ElMessage.error(error.message || '登录失败')
+    }
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 <style lang="less" scoped>
