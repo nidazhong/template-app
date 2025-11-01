@@ -1,5 +1,6 @@
 import {createWebHistory, createRouter} from 'vue-router'
 
+
 import Main from '@/views/Layout.vue'
 import HomeView from '@/views/Home.vue'
 import UserView from '@/views/User.vue'
@@ -27,6 +28,7 @@ const routes = [
             {
                 path: '/:pathMatch(.*)*',
                 name: 'NotFound',
+                meta:{title:"NotFound"},
                 component: Notfound
             }
         ]
@@ -39,7 +41,54 @@ const routes = [
 
 ]
 
+// 创建组件映射
+const componentMap: Record<string, () => Promise<any>> = {
+    // 页面组件
+    // 'home': () => import('@/views/Home.vue'),
+    // 'mall': () => import('@/views/mall/index.vue'),
+    '/user': () => import('@/views/User.vue'),
+    '/brand': () => import('@/views/Brand.vue'),
+    '/add': () => import('@/views/GoodsAdd.vue'),
+    // 'page1': () => import('@/views/other/PageOne.vue'),
+    // 'page2': () => import('@/views/other/PageTwo.vue')
+}
 
+interface RouteItem {
+    path: string
+    name: string
+    meta: {
+        title: string
+    }
+    component?: any
+    children?: RouteItem[]
+}
+
+export function menuToRoutes(menuData: any[]): any[] {
+    const routes: any[] = []
+
+    menuData.forEach((menu: any) => {
+        // = new RouteItem
+        const route : RouteItem =  {
+            path: menu.path,
+            name: menu.name,
+            meta: {
+                title: menu.name
+            }
+        }
+
+        if (menu.children && menu.children.length > 0) {
+            // route.component = componentMap['BasicLayout']
+            route.children = menuToRoutes(menu.children)
+        } else {
+            // 根据菜单信息找到对应的组件
+            route.component = componentMap[menu.path]
+        }
+
+        routes.push(route)
+    })
+
+    return routes
+}
 
 
 

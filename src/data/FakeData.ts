@@ -43,14 +43,12 @@
                 path: '/other/page1',
                 name: '页面1',
                 icon: 'Open',
-                url: 'other/PageOne'
             },
             {
                 id:"",
                 path: '/other/page2',
                 name: '页面2',
                 icon: 'setting',
-                url: 'other/PageTwo'
             }
         ]
     }
@@ -128,17 +126,16 @@
         icon: 'HomeFilled',
       },
       {
-        id: "4",
-        name: '其他',
-        path: '/other',
-        icon: 'Share',
+        id: "2",
+        path: '/mall',
+        name: '商品管理',
+        icon: 'GoodsFilled',
         children: [
           {
-            id: "41",
-            path: '/other/page1',
-            name: '页面1',
-            icon: 'Open',
-            url: 'other/PageOne'
+            id: "22",
+            path: '/mall/brand',
+            name: '品牌管理',
+            icon: 'ShoppingTrolley',
           }
         ]
       }

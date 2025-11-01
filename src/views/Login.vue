@@ -84,6 +84,7 @@ import router from "@/router/index.js";
 import { getUserInfo, login } from '@/api/user'; // 导入 API 方法
 import { useAppStore } from '@/stores/app'
 
+
 const appStore = useAppStore()
 // 统一数据管理
 // 常用ref > reactive
@@ -147,7 +148,6 @@ const getSMS = () => {
   }, 1000)
 }
 
-
 //
 const doLogin = async () =>{
   try {
@@ -161,8 +161,11 @@ const doLogin = async () =>{
     // 导航守卫
     data.loading = true
     localStorage.setItem("token",response.data.token)
+    appStore.setUserInfo({"name":response.data.userInfo.username})
     // 通过app.ts 放入localStorage
     appStore.setMenu(response.data.userInfo.menu)
+    // 添加动态路由
+    appStore.putRouters(response.data.userInfo.menu);
     ElMessage.success('登录成功')
     // 跳转首页
     router.push("/home")

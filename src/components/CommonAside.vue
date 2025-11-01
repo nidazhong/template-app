@@ -10,7 +10,7 @@
   >
     <div id="title">
       <img src="../assets/images/1.png" alt="">
-      <span v-if="!appStore.isCollapse">欢迎你，管理员！</span>
+      <span v-if="!appStore.isCollapse">欢迎你，{{ appStore.userInfo.name }} ！</span>
     </div>
     <!--引入递给菜单组件-->
     <CommonMenu
@@ -25,11 +25,11 @@
 import {computed, ref} from 'vue'
 import CommonMenu from "@/components/CommonMenu.vue";
 import router from "@/router/index";
-
-
 import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()
+
+appStore.loadUserInfo()
 
 // 处理菜单项点击
 const handleMenuItemClick = (item) => {

@@ -45,7 +45,6 @@ const appStore = useAppStore()
 const doClick =  async (command) => {
   if (command === 'cancel') {
     // 演示请求后端做一些后端清理记录工作
-    // const response = await login({"id":"aa"})
     // 清除token
     localStorage.removeItem("token")
     ElMessage.success('已退出')

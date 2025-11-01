@@ -14,7 +14,7 @@ Mock.mock('/user/login', 'post', function (options){
     if (user) {
         return {code: 200, data: {token: Mock.Random.guid(),
             message: '登录成功',
-            userInfo: {id:"1", username: user.username, menu:user.menu}}}
+            userInfo: {id:"1", username: user.name, menu:user.menu}}}
     } else {
         return {code: 500, data: {message: '登录失败'}}}
 
