@@ -42,9 +42,6 @@ const handleMenuItemClick = (item) => {
   router.push(item.path)
 }
 
-// 通过菜单id找到所以父菜单
-
-
 </script>
 
 <style lang="less" scoped>

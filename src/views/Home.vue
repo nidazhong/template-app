@@ -1,3 +1,1 @@
-<template>
-  <h1>我是Home</h1>
-</template>
+<template><h1>我是Home</h1></template>

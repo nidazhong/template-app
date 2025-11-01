@@ -6,6 +6,7 @@ import UserView from '@/views/User.vue'
 import Login from '@/views/Login.vue'
 import Brand from '@/views/Brand.vue'
 import GoodsAdd from '@/views/GoodsAdd.vue'
+import Notfound from "@/views/Notfound.vue";
 
 const routes = [
     {
@@ -14,7 +15,7 @@ const routes = [
         redirect: '/home', // 添加默认重定向
         meta:{},
         children: [
-            {path: '/home',  meta:{title:"首页"}, component: HomeView},
+            {path: '/home',  meta:{title:"首页"}, component:  HomeView},
             {path: '/user',  meta:{title:"用户管理"},component: UserView},
             {path: '/mall',  meta:{title:"商品管理"}, component: null,
                 children: [
@@ -22,13 +23,20 @@ const routes = [
                     {path: '/mall/add',  meta:{title:"商品列表"},component: GoodsAdd},
                 ]
             },
+            // 通配符路由 - 放在最后
+            {
+                path: '/:pathMatch(.*)*',
+                name: 'NotFound',
+                component: Notfound
+            }
         ]
     },
     {
         path: "/login",
         meta:{title:"登录"},
         component: Login,
-    }
+    },
+
 ]
 
 
