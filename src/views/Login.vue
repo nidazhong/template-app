@@ -82,7 +82,9 @@ import CaptchaCode from 'vue-captcha-code' // 模拟图形验证码，实际后�
 import { ElMessage } from 'element-plus'
 import router from "@/router/index.js";
 import { getUserInfo, login } from '@/api/user'; // 导入 API 方法
+import { useAppStore } from '@/stores/app'
 
+const appStore = useAppStore()
 // 统一数据管理
 // 常用ref > reactive
 // ref 在模版中不需要.value Vue会自动解包 ，在js中需要
@@ -91,8 +93,8 @@ const data = ref({
   countdown: 0, // 获取手机短信验证码的默认值
   loading: false, // 登录状态
   user:{
-    username: '',
-    password: '',
+    username: 'admin',
+    password: '1',
     phone: '',
     smsCode: ''
   },
@@ -159,6 +161,8 @@ const doLogin = async () =>{
     // 导航守卫
     data.loading = true
     localStorage.setItem("token",response.data.token)
+    // 通过app.ts 放入localStorage
+    appStore.setMenu(response.data.userInfo.menu)
     ElMessage.success('登录成功')
     // 跳转首页
     router.push("/home")

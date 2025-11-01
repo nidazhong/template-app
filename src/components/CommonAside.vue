@@ -14,7 +14,7 @@
     </div>
     <!--引入递给菜单组件-->
     <CommonMenu
-        :menu-data="menuData.data"
+        :menu-data="menuData"
         @menu-item-click="handleMenuItemClick"
     />
 
@@ -22,8 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref} from 'vue'
-import MenuData from '@/data/MenuData'
+import {computed, ref} from 'vue'
 import CommonMenu from "@/components/CommonMenu.vue";
 import router from "@/router/index";
 
@@ -32,15 +31,18 @@ import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()
 
-const menuData = ref(MenuData) // 菜单数据
-
-
-
 // 处理菜单项点击
 const handleMenuItemClick = (item) => {
   // console.log(item.name + " " + item.id)
   router.push(item.path)
 }
+
+// 从localStorage获取数据或者app.ts
+const menuData = computed(() =>{
+  // appStore.menuList ||
+  return JSON.parse(localStorage.getItem("menu"))
+})
+
 
 </script>
 
