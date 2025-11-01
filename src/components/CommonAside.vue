@@ -10,11 +10,13 @@
   >
     <div id="title">
       <img src="../assets/images/1.png" alt="">
+      <!---->
       <span v-if="!appStore.isCollapse">欢迎你，{{ appStore.userInfo.name }} ！</span>
     </div>
     <!--引入递给菜单组件-->
+    <!--从pinia 的持久化自动拿到Menu localStorage获取数据或者app.ts-->
     <CommonMenu
-        :menu-data="menuData"
+        :menu-data="appStore.menu"
         @menu-item-click="handleMenuItemClick"
     />
 
@@ -22,27 +24,17 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref} from 'vue'
 import CommonMenu from "@/components/CommonMenu.vue";
 import router from "@/router/index";
 import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()
 
-appStore.loadUserInfo()
 
 // 处理菜单项点击
 const handleMenuItemClick = (item) => {
-  // console.log(item.name + " " + item.id)
   router.push(item.path)
 }
-
-// 从localStorage获取数据或者app.ts
-const menuData = computed(() =>{
-  // appStore.menuList ||
-  return JSON.parse(localStorage.getItem("menu"))
-})
-
 
 </script>
 

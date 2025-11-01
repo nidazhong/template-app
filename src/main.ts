@@ -5,11 +5,15 @@ import 'element-plus/dist/index.css'
 import router from './router/index'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue' // 引入Icon
 import { createPinia } from 'pinia' // 状态管理
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import '@/styles/index.scss' // 引入全局样式
+
 
 
 const app = createApp(App)
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
 
 // 注册所有图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
