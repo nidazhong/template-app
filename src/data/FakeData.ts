@@ -61,7 +61,7 @@
     name: "admin",
     menu: [
       {
-        id: "1",
+        id: "1eq",
         path: '/home',
         name: '首页',
         icon: 'HomeFilled',

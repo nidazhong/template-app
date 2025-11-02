@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
         redirect: '/home', // 添加默认重定向
         meta:{},
         children: [
-            {path: '/home',  meta:{title:"首页"}, component:  HomeView}
+            // {path: '/home',  name: '1', meta:{title:"首页"}, component:  HomeView}
         ]
     },
     {
@@ -30,6 +30,7 @@ const routes: RouteRecordRaw[] = [
 
 // 组件映射表（菜单Path - 组件对照）
 const componentMap: Record<string, any> = {
+    '/home': () => import('@/views/Home.vue'),
     '/mall/brand': () => import('@/views/Brand.vue'),
     '/mall/add': () => import('@/views/GoodsAdd.vue'),
     '/user': () => import('@/views/User.vue'),
@@ -47,15 +48,14 @@ export const dynamicRoutes: RouteRecordRaw[] = []
 
 export const addDynamicRoutes = (menuArr) => {
 
-    const addRoutes = (menuList) => {
+    const addRoutes = (parentName,menuList) => {
         menuList.forEach((menu) => {
-            if (!menu.path) return false
-            if (menu.path === '/' || menu.path === '/home') return false
+            if (!menu.path || menu.path === '/') return false
 
             // 构建路由
             const routeItem: RouteRecordRaw =  {
                 path: menu.path,
-                name: menu.id, // 唯一标志
+                name: menu.id, // 唯一标志, 注意我把菜单的id用作了路由的name
                 meta: {title: menu.name},
                 component:componentMap[menu.path] || (() => import('@/views/404.vue')) // 如果菜单有，但是没有组件映射，直接404
             }
@@ -63,11 +63,12 @@ export const addDynamicRoutes = (menuArr) => {
             if (menu.path  && !router.hasRoute(menu.path)) {
                 dynamicRoutes.push(routeItem)
                 // 加入路由，注意父级一定要有name属性
-                router.addRoute('Layout', routeItem);
+                router.addRoute(parentName, routeItem);
             }
             // 递归处理子菜单
             if (menu.children && menu.children.length > 0) {
-                addRoutes(menu.children);
+                // 菜单的id用作了路由的name
+                addRoutes(menu.id, menu.children);
             }
         });
         // 统配组件放到最后，未找到或者未配置页面，直接跳转404页面
@@ -80,7 +81,7 @@ export const addDynamicRoutes = (menuArr) => {
     };
 
     // 调用
-    addRoutes(menuArr);
+    addRoutes('Layout',menuArr);
 
 };
 
