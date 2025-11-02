@@ -23,8 +23,6 @@ router.beforeEach((to, from, next) => {
 
     // 动态路由恢复逻辑（仅执行一次）
     if (token && !isRoutesRestored) {
-        // const store = JSON.parse(localStorage.getItem('app-store'))
-
         const store = JSON.parse(localStorage.getItem('app-store') || '{}')
         const menu = store?.userInfo?.menu
 

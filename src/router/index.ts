@@ -7,40 +7,10 @@ import UserView from '@/views/User.vue'
 import Login from '@/views/Login.vue'
 import Brand from '@/views/Brand.vue'
 import GoodsAdd from '@/views/GoodsAdd.vue'
-import Notfound from "@/views/Notfound.vue";
+import Notfound from "@/views/404Notfound.vue";
 import type { RouteRecordRaw } from 'vue-router'
 
 
-const asyncRoutes : RouteRecordRaw[] = [
-    {
-        path: "/",
-        component: Layout,
-        redirect: '/home', // 添加默认重定向
-        meta:{},
-        children: [
-            {path: '/home',  meta:{title:"首页"}, component:  HomeView},
-            {path: '/user',  meta:{title:"用户管理"},component: UserView},
-            {path: '/mall',  meta:{title:"商品管理"}, component: null,
-                children: [
-                    {path: '/mall/brand',meta:{title:"品牌管理"},component: Brand},
-                    {path: '/mall/add',  meta:{title:"商品列表"},component: GoodsAdd},
-                ]
-            },
-            // 通配符路由 - 放在最后
-            {
-                path: '/:pathMatch(.*)*',
-                name: 'NotFound',
-                meta:{title:"NotFound"},
-                component: Notfound
-            }
-        ]
-    },
-    {
-        path: "/login",
-        meta:{title:"登录"},
-        component: Login,
-    },
-]
 
 // 基础路由（静态路由）
 const routes: RouteRecordRaw[] = [
@@ -64,7 +34,6 @@ const routes: RouteRecordRaw[] = [
 
 // 组件映射表（菜单Path - 组件对照）
 const componentMap: Record<string, any> = {
-
     '/mall/brand': () => import('@/views/Brand.vue'),
     '/mall/add': () => import('@/views/GoodsAdd.vue'),
     '/user': () => import('@/views/User.vue'),
@@ -87,7 +56,7 @@ export const addDynamicRoutes = (menuArr) => {
                 path: menu.path,
                 // name: menu.id,
                 meta: {title: menu.name},
-                component:componentMap[menu.path] || (() => import('@/views/Notfound.vue'))
+                component:componentMap[menu.path]
             }
 
             if (menu.path && !router.hasRoute(menu.path)) {
@@ -100,8 +69,13 @@ export const addDynamicRoutes = (menuArr) => {
                 addRoutes(menu.children);
             }
         });
-        // 统配组件
-        addNotFoundRoute()
+        // 统配组件放到最后，未找到或者未配置页面，直接跳转404页面
+        router.addRoute("Layout",{
+            path: '/:pathMatch(.*)*',
+            name: 'NotFound',
+            meta: { title: "NotFound" },
+            component: () => import('@/views/404Notfound.vue')
+        })
     };
 
     // 调用
@@ -109,15 +83,6 @@ export const addDynamicRoutes = (menuArr) => {
 
 };
 
-// 添加 404 路由
-function addNotFoundRoute() {
-    router.addRoute({
-        path: '/:pathMatch(.*)*',
-        name: 'NotFound',
-        meta: { title: "NotFound" },
-        component: () => import('@/views/NotFound.vue')
-    })
-}
 
 
 export default router; // 导出路由
