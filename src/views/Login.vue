@@ -80,7 +80,7 @@ import {Lock,Promotion,Message } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import CaptchaCode from 'vue-captcha-code' // 模拟图形验证码，实际后端获取
 import { ElMessage } from 'element-plus'
-import router, {addDynamicRoutes} from "@/router/index.js";
+import router, {addDynamicFLatRoutes} from "@/router/index.js";
 import { getUserInfo, login } from '@/api/user'; // 导入 API 方法
 import { useAppStore } from '@/stores/app'
 
@@ -167,8 +167,9 @@ const doLogin = async () =>{
     localStorage.setItem("token",response.data.token)
     appStore.setUserInfo(response.data.userInfo)
     // 通过app.ts persist 放入localStorage
-    // 添加动态路由
-    addDynamicRoutes(response.data.userInfo.menu)
+    // 添加平铺动态路由
+    addDynamicFLatRoutes(response.data.userInfo.menu)
+
     ElMessage.success('登录成功')
     // 跳转首页
     router.push("/home")

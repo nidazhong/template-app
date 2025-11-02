@@ -16,9 +16,7 @@ const routes: RouteRecordRaw[] = [
         component: Layout,
         redirect: '/home', // 添加默认重定向
         meta:{},
-        children: [
-            // {path: '/home',  name: '1', meta:{title:"首页"}, component:  HomeView}
-        ]
+        children: []
     },
     {
         path: "/login",
@@ -35,7 +33,6 @@ const componentMap: Record<string, any> = {
     '/mall/add': () => import('@/views/GoodsAdd.vue'),
     '/user': () => import('@/views/User.vue'),
 }
-
 
 
 const router = createRouter({
@@ -60,44 +57,84 @@ const findComponent = (path: string) => {
 }
 
 
-export const addDynamicRoutes = (menuArr) => {
 
-    const addRoutes = (parentName,menuList) => {
-        menuList.forEach((menu) => {
-            if (!menu.path || menu.path === '/') return false
 
-            // 构建路由
-            const routeItem: RouteRecordRaw =  {
-                path: menu.path,
-                name: menu.id, // 唯一标志, 注意我把菜单的id用作了路由的name
-                meta: {title: menu.name},
-                component:componentMap[menu.path]// 如果菜单有，但是没有组件映射，直接404 (() => import('@/views/404.vue'))
-            }
+export const addDynamicFLatRoutes = (menuArr) => {
 
-            if (menu.path  && !router.hasRoute(menu.path)) {
-                dynamicRoutes.push(routeItem)
-                // 加入路由，注意父级一定要有name属性
-                router.addRoute(parentName, routeItem);
-            }
-            // 递归处理子菜单
-            if (menu.children && menu.children.length > 0) {
-                // 菜单的id用作了路由的name
-                addRoutes(menu.id, menu.children);
-            }
-        });
-        // 统配组件放到最后，未找到或者未配置页面，直接跳转404页面
-        router.addRoute("Layout",{
-            path: '/:pathMatch(.*)*',
-            name: '404',
-            meta: { title: "404 NotFound" },
-            component: () => import('@/views/404.vue')
-        })
-    };
+    let flattenRoutes = buildFlattenRoutes(menuArr);
+    // console.log(flattenRoutes)
 
-    // 调用
-    addRoutes('Layout',menuArr);
+    flattenRoutes.forEach(item => {
+        // 这里必须设置到对应的一级菜单下面
+        router.addRoute("Layout", item);
+    });
+
+
+    router.addRoute("Layout",{
+        path: '/:pathMatch(.*)*',
+        name: '404',
+        meta: { title: "404 NotFound" },
+        component: () => import('@/views/404.vue')
+    })
+
 
 };
+
+
+export  const processMultiLevelMenu = (menuList: any[]) => {
+    const routes: any[] = []
+
+    const buildRoute = (item: any, parentPath = ''): any => {
+        // 创建路由对象
+        const route: any = {
+            path: item.path,
+            name: item.id,
+            meta: { title: item.name }
+        }
+
+        // 设置组件
+        route.component = componentMap[item.path] //|| (() => import('@/views/404.vue'))
+
+        // 如果有子菜单，递归处理并设置为 children
+        if (item.children && item.children.length > 0) {
+            route.children = item.children.map((child: any) => buildRoute(child, item.id))
+        }
+
+        routes.push(route)
+        return route
+    }
+    menuList.forEach(item => buildRoute(item))
+    return routes
+}
+
+// 动态平铺路由
+export const buildFlattenRoutes = (menuList: any[]) => {
+    const allRoutes: any[] = []
+
+    const buildRoute = (item: any) => {
+        // 创建路由对象
+        const route: any = {
+            path: item.path,
+            name: item.id,
+            meta: { title: item.name },
+            component: componentMap[item.path] || (() => import('@/views/404.vue'))
+        }
+
+        // 立即添加到平铺数组
+        allRoutes.push(route)
+
+        // 递归构建子路由，但不设置 children
+        if (item.children && item.children.length > 0) {
+            item.children.forEach(buildRoute)
+        }
+
+        return route
+    }
+
+    menuList.forEach(buildRoute)
+    return allRoutes
+}
+
 
 
 export function removeDynamicRoutes() {

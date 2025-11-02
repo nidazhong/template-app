@@ -27,6 +27,10 @@
 import CommonMenu from "@/components/CommonMenu.vue";
 import router from "@/router/index";
 import { useAppStore } from '@/stores/app'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
 
 const appStore = useAppStore()
 

@@ -1,6 +1,6 @@
 // 路由守卫
 import router from "@/router/index";
-import {addDynamicRoutes} from "@/router/index.js";
+import {addDynamicFLatRoutes} from "@/router/index.js";
 
 // 恢复路由只执行一次
 let isRoutesRestored = false
@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
         const menu = store?.userInfo?.menu
 
         if (menu && menu.length) {
-            addDynamicRoutes(menu)
+            addDynamicFLatRoutes(menu)
             isRoutesRestored = true
 
             // ⚠️ 路由刚动态添加完需要重新导航一次，否则会 404

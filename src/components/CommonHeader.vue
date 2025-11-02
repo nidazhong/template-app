@@ -8,7 +8,8 @@
       <el-breadcrumb separator="/">
         <transition-group name="breadcrumb"><!--动态效果-->
         <el-breadcrumb-item key="/home" to="/home">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :key="tab.path" :to="tab.path && !tab.path.includes('pathMatch') ? tab.path : undefined" v-for="tab in breadcrumbList" >
+          <!--&& !tab.path.includes('pathMatch') ? tab.path : undefined-->
+        <el-breadcrumb-item :key="tab.path" :to="tab.path " v-for="tab in breadcrumbList" >
           {{ tab.meta.title }}
         </el-breadcrumb-item>
         </transition-group>
@@ -35,7 +36,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 
-import router,{removeDynamicRoutes,dynamicRoutes} from "@/router/index.js";
+import router,{removeDynamicRoutes} from "@/router/index.js";
 import { useAppStore } from '@/stores/app'
 import { logout,login } from '@/api/user'; // 导入 API 方法
 import { ElMessage } from 'element-plus'
@@ -58,12 +59,52 @@ const doClick =  async (command) => {
   }
 }
 
+// 平铺路由后，通过当前路由，找到所有父路由（路径）
+const generateBreadcrumb = () => {
+  const currentPath = route.path
+  const paths = currentPath.split('/').filter(Boolean)
+
+  const breadcrumbItems = []
+  let accumulatedPath = ''
+
+
+  // 根据路径分段构建面包屑
+  paths.forEach((segment, index) => {
+    accumulatedPath += `/${segment}`
+
+    // 跳过根路径和首页
+    if (accumulatedPath === '/' || accumulatedPath === '/home') {
+      return
+    }
+
+    // 查找这个路径对应的路由信息
+    const matchedRoute = router.getRoutes().find(r => r.path === accumulatedPath)
+
+    if (matchedRoute) {
+      breadcrumbItems.push({
+        path: accumulatedPath,
+        meta: { title: matchedRoute.meta?.title || segment },
+        name: matchedRoute.name
+      })
+    } else {
+      // 如果没有找到路由，使用路径段作为标题
+      breadcrumbItems.push({
+        path: accumulatedPath,
+        meta: { title: segment },
+        name: segment
+      })
+    }
+  })
+
+  return breadcrumbItems
+}
 
 // 计算属性，根据路由变化面包屑导航
 const breadcrumbList = computed(() =>{
-  // route 当前路由信息对象
-  return route.matched.filter(item => item.path !== '/'
-      && item.path !== '/home')
+  // return route.matched.filter(item => item.path !== '/'
+  //     && item.path !== '/home')
+  //
+  return generateBreadcrumb()
 })
 
 
