@@ -21,7 +21,7 @@ router.beforeEach((to, from, next) => {
         return next('/home')
     }
 
-    // 动态路由恢复逻辑（仅执行一次）
+    // 动态路由恢复逻辑（仅执行一次），解决动态路由添加后有空白页问题
     if (token && !isRoutesRestored) {
         const store = JSON.parse(localStorage.getItem('app-store') || '{}')
         const menu = store?.userInfo?.menu

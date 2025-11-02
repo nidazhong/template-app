@@ -9,7 +9,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue' // 引入Icon
 import '@/styles/index.scss' // 引入全局样式
 import './mock/index.js' // 引入mock文件  mock 方式，正式发布时，注释掉该处即可
 import './router/guard' // 路由守卫
-
+import {addDynamicFLatRoutes} from "@/router/index.js";
 
 
 const app = createApp(App)
@@ -25,7 +25,24 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.use(ElementPlus)
 app.use(pinia)
-app.use(router)
+// app.use(router)
 
-app.mount('#app')
+
+
+async function bootstrap() {
+    const token = localStorage.getItem('token')
+    if (token) {
+        const store = JSON.parse(localStorage.getItem('app-store') || '{}')
+        const menu = store?.userInfo?.menu
+        if (menu && menu.length) {
+            addDynamicFLatRoutes(menu)
+        }
+    }
+
+    app.use(router)
+    await router.isReady()
+    app.mount('#app')
+}
+
+bootstrap()
 
