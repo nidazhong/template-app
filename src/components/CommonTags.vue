@@ -12,9 +12,7 @@
 <script lang="ts" setup>
 import router from "@/router/index";
 import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
 import { useAppStore } from '@/stores/app'
-import type { TagProps } from 'element-plus'
 
 
 const route = useRoute()
@@ -24,7 +22,10 @@ const tagsType = ['primary', 'success', 'info', 'warning', 'danger']
 
 // 点击标签，跳转路由
 const changeRoute  = (tag) => {
+  // 跳转路由
   router.push(tag.path)
+  // 展开激活对应菜单
+  appStore.activePath = tag.path
 }
 
 // 关闭

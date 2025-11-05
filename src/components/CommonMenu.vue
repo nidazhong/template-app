@@ -35,6 +35,9 @@
 
 <script setup>
 
+import { useAppStore } from '@/stores/app'
+const appStore = useAppStore()
+
 defineProps({
   menuData: {
     type: Array,

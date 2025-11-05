@@ -9,7 +9,8 @@
         <transition-group name="breadcrumb"><!--动态效果-->
         <el-breadcrumb-item key="/home" to="/home">首页</el-breadcrumb-item>
           <!--&& !tab.path.includes('pathMatch') ? tab.path : undefined-->
-        <el-breadcrumb-item :key="tab.path" :to="tab.path " v-for="tab in breadcrumbList" >
+        <el-breadcrumb-item :key="tab.path" :to="tab.path" v-for="tab in breadcrumbList"
+                            @click="handleBreadcrumbClick(tab)">
           {{ tab.meta.title }}
         </el-breadcrumb-item>
         </transition-group>
@@ -54,6 +55,10 @@ const doClick =  async (command) => {
     // 跳转登录页面
     router.push("/login")
   }
+}
+
+const handleBreadcrumbClick = (tab) => {
+  appStore.activePath = tab.path
 }
 
 // 平铺路由后，通过当前路由，找到所有父路由（路径）

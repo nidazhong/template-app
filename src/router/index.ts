@@ -29,6 +29,7 @@ const routes: RouteRecordRaw[] = [
 // 组件映射表（菜单Path - 组件对照）
 const componentMap: Record<string, any> = {
     '/home': () => import('@/views/Home.vue'),
+    '/mall': () => import('@/views/Mall.vue'),
     '/mall/brand': () => import('@/views/Brand.vue'),
     '/mall/add': () => import('@/views/GoodsAdd.vue'),
     '/user': () => import('@/views/User.vue'),

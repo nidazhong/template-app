@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 export const useAppStore = defineStore('app', {
     state: () => ({
         isCollapse: false,
+        activePath:'',// 被激活的菜单
         // menu:[], // 不同账号的菜单数据
         userInfo: {
             username: '？',

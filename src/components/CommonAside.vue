@@ -2,7 +2,7 @@
 
   <!-- 菜单 -->
   <el-menu
-      default-active="2"
+      :default-active="appStore.activePath"
       :collapse="appStore.isCollapse"
       active-text-color="#409eff"
       background-color="#304156"
@@ -18,6 +18,7 @@
     <CommonMenu
         :menu-data="appStore.userInfo.menu"
         @menu-item-click="handleMenuItemClick"
+
     />
 
   </el-menu>
@@ -40,6 +41,7 @@ const handleMenuItemClick = (item) => {
   router.push(item.path)
   // 添加标签
   appStore.addTag(item)
+  appStore.activePath = item.path
 }
 
 </script>
