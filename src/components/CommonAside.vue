@@ -17,7 +17,7 @@
     <!--从pinia 的持久化自动拿到Menu localStorage获取数据或者app.ts-->
     <CommonMenu
         :menu-data="appStore.userInfo.menu"
-        @menu-item-click="handleMenuItemClick"
+        @menu-item-click="handleMenuClick"
 
     />
 
@@ -37,7 +37,7 @@ const appStore = useAppStore()
 
 
 // 处理菜单项点击
-const handleMenuItemClick = (item) => {
+const handleMenuClick = (item) => {
   router.push(item.path)
   // 添加标签
   appStore.addTag(item)

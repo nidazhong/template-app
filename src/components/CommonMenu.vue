@@ -14,14 +14,14 @@
       </template>
       <!--重点-->
       <!-- 递归调用 -->
-      <CommonMenu :menu-data="item.children"   @menu-item-click="handleMenuItemClick" />   <!-- 这里传递事件 -->
+      <CommonMenu :menu-data="item.children"   @menu-item-click="emit('menu-item-click', $event)" />   <!-- 这里传递事件 -->
     </el-sub-menu>
 
     <!-- 没有子菜单的情况 -->
     <el-menu-item
         v-else
         :index="item.path"
-        @click="handleMenuItemClick(item)"
+        @click="handleMenuItemClick(item, $event)"
     >
       <el-icon v-if="item.icon">
         <component :is="item.icon" />
@@ -45,11 +45,15 @@ defineProps({
   }
 })
 
-// 通知父组件去调用
+// 定义发射时间，通知父组件去调用
 const emit = defineEmits(['menu-item-click'])
-const handleMenuItemClick = (item) => {
+
+const handleMenuItemClick = (item,event) => {
+  // 安全地阻止事件冒泡
+  // 使用可选链安全调用
+  event?.stopPropagation?.();
+  // console.log('收到子组件的数据:', item);
   emit('menu-item-click', item)
-  // 告诉父组件：我被点击了，这是点击的数据
 }
 </script>
 <style lang="less" scoped>

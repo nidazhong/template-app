@@ -106,6 +106,7 @@ const breadcrumbList = computed(() =>{
   // return route.matched.filter(item => item.path !== '/'
   //     && item.path !== '/home')
   //
+  console.log(router.getRoutes())
   return generateBreadcrumb()
 })
 
