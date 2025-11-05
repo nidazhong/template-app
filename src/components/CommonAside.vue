@@ -60,9 +60,9 @@ const handleMenuClick = (item) => {
   // 用户头像
   #title {
     display: flex;
-    justify-content: center; // X 轴居中
+    justify-content: start; // X 轴居中
     align-items: center;
-    padding: 10px 5px;
+    padding: 10px;
 
     img {
       display: flex;
