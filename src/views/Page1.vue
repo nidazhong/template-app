@@ -54,6 +54,7 @@
         <el-table-column prop="zip" label="Zip" />
       </el-table>
     </div>
+
   </div>
 </template>
 <script setup>
@@ -297,11 +298,7 @@ const tableData = [
 
   #table_area {
     flex: 1;               /* ✅ 占满剩余空间 */
-    overflow-y: auto;      /* ✅ 只让表格区域滚动 */
-    overflow-x: hidden;    /* 可选：防止横向滚动 */
-    background-color: #fff;
     border: 1px solid #EBEEF5;
-
     /* ✅ 修正 el-table 100% 高度显示 */
     .el-table {
       width: 100%;
