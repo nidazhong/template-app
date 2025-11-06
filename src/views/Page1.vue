@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <div id="search_area">
-      <el-form label-width="70px" >
-        <el-row :gutter="20" >
+      <el-form label-width="70px">
+        <el-row :gutter="20">
           <el-col :span="5">
             <el-form-item label="关键字">
               <el-input placeholder="请输入关键字" />
@@ -19,7 +19,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12"  class="btn-area">
+          <el-col :span="12" class="btn-area">
             <div class="btn-wrapper">
               <el-button type="primary" @click="">
                 <el-icon><Search /></el-icon>
@@ -35,212 +35,97 @@
       </el-form>
     </div>
 
-    <div id="operation_area">
-      <el-row>
-        <el-col :span="24" :push="4">
-          <el-button type="success" >
-            <el-icon><Plus /></el-icon>新建
-          </el-button>
-        </el-col>
-      </el-row>
+    <div id="table_main">
+      <div id="operation_area">
+        <el-row>
+          <el-col :span="24">
+            <el-button type="success">
+              <el-icon><Plus /></el-icon>新建
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <div id="data_area">
+        <el-table
+            stripe
+            :data="tableData"
+            :height="tableHeight"
+        >
+          <el-table-column fixed prop="date" label="Date" width="150" />
+          <el-table-column prop="name" label="Name" width="120" />
+          <el-table-column prop="state" label="State" width="120" />
+          <el-table-column prop="city" label="City" width="320" />
+          <el-table-column prop="address" label="Address" width="600" />
+          <el-table-column prop="zip" label="Zip" />
+        </el-table>
+      </div>
     </div>
-    <div id="table_area">
-      <el-table stripe :data="tableData" style="width: 100%" height="250">
-        <el-table-column fixed prop="date" label="Date" width="150" />
-        <el-table-column prop="name" label="Name" width="120" />
-        <el-table-column prop="state" label="State" width="120" />
-        <el-table-column prop="city" label="City" width="320" />
-        <el-table-column prop="address" label="Address" width="600" />
-        <el-table-column prop="zip" label="Zip" />
-      </el-table>
-    </div>
-
   </div>
 </template>
+
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useDefaultPopperOptions } from '@/utils/usePopperOptions'
 
 const dateRange = ref([])
 const popperOptions = useDefaultPopperOptions()
+const tableHeight = ref(400) // 初始高度
 
-
-const tableData = [
+// 模拟表格数据
+const tableData = ref([
   {
     date: '2016-05-03',
     name: 'Tom',
     state: 'California',
     city: 'Los Angeles',
     address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
+    zip: 'CA 90036'
   },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
+  // 可以添加更多数据来测试滚动条
+  ...Array.from({ length: 20 }, (_, index) => ({
+    date: `2016-05-${String(index + 1).padStart(2, '0')}`,
+    name: `User${index + 1}`,
     state: 'California',
     city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-08',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-06',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-07',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },{
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-08',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-06',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-07',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },{
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-08',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-06',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-07',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-]
+    address: `No. ${index + 1}, Grove St, Los Angeles`,
+    zip: 'CA 90036'
+  }))
+])
 
+// 计算表格高度
+const calculateTableHeight = () => {
+  nextTick(() => {
+    const windowHeight = window.innerHeight
+    const searchArea = document.getElementById('search_area')
+    const operationArea = document.getElementById('operation_area')
+    const tableMain = document.getElementById('table_main')
+
+    if (searchArea && operationArea && tableMain) {
+      const searchHeight = searchArea.offsetHeight
+      const operationHeight = operationArea.offsetHeight
+      const tableMainTop = tableMain.getBoundingClientRect().top
+      const margin = 20 // 预留边距
+
+      tableHeight.value = windowHeight - tableMainTop - operationHeight - margin
+    }
+  })
+}
+
+onMounted(() => {
+  calculateTableHeight()
+  window.addEventListener('resize', calculateTableHeight)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', calculateTableHeight)
+})
 </script>
+
 <style lang="less" scoped>
 .app-container {
   display: flex;
-  flex-direction: column;// 垂直布局
+  flex-direction: column;
   height: calc(100vh - 90px); /* 90px是header+tags的高度*/
-
 
   #search_area {
     display: flex;
@@ -251,8 +136,6 @@ const tableData = [
     flex-shrink: 0;
     margin-top: 5px;
     border: 1px solid #EBEEF5;
-
-
     background-color: #fff;
 
     .el-form {
@@ -260,22 +143,19 @@ const tableData = [
       width: 100%;
       padding: 0 10px;
 
-      // ✅ 让整行垂直居中
       ::v-deep(.el-row) {
         height: 100%;
         display: flex;
         align-items: center;
       }
 
-      // ✅ 修正 el-form-item 的默认顶部对齐
       ::v-deep(.el-form-item) {
-        margin-bottom: 0;          /* 去掉默认的下边距 */
-        height: 100%;              /* 撑满容器高度 */
+        margin-bottom: 0;
+        height: 100%;
         display: flex;
-        align-items: center;       /* 垂直居中 ✅ */
+        align-items: center;
       }
 
-      // ✅ 按钮区域右对齐
       .btn-area {
         display: flex;
         justify-content: flex-end;
@@ -289,20 +169,38 @@ const tableData = [
     }
   }
 
-  #operation_area {
-    display: flex;
-    align-items: center;
-    height: 50px;
-    flex-shrink: 0;
-  }
-
-  #table_area {
-    flex: 1;               /* ✅ 占满剩余空间 */
+  #table_main {
+    margin-top: 10px;
     border: 1px solid #EBEEF5;
-    /* ✅ 修正 el-table 100% 高度显示 */
-    .el-table {
-      width: 100%;
-      min-height: 100%; /* 防止滚动时塌陷 */
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* 占据剩余空间 */
+    min-height: 0; /* 重要：允许内部滚动 */
+
+    #operation_area {
+      height: 30px;
+      flex-shrink: 0;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #EBEEF5;
+    }
+
+    #data_area {
+      flex: 1; /* 占据 table_main 的剩余空间 */
+      min-height: 0; /* 重要：允许内部滚动 */
+
+      ::v-deep(.el-table) {
+        height: 100%;
+
+        /* 确保表头固定 */
+        .el-table__header-wrapper {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+        }
+      }
     }
   }
 }
