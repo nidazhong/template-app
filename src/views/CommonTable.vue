@@ -65,15 +65,26 @@
         </el-table>
     </div>
     <!--分页-->
-    <div class="pagination" id="pagination">
+    <div class="table-pagination" >
+      <!--<el-pagination layout="prev, pager, next" :total="50" />-->
+
+      <!--<el-pagination-->
+      <!--    :current-page=currentPage-->
+      <!--    :page-size=pageSize-->
+      <!--    :page-sizes="[20, 50, 100, 300]"-->
+      <!--    :background="true"-->
+      <!--    :pager-count="9"-->
+      <!--    layout="total, prev, pager, next, jumper,sizes"-->
+      <!--    :total="1000"-->
+      <!--/>-->
+
       <el-pagination
-          :current-page=currentPage
-          :page-size=pageSize
-          :page-sizes="[20, 50, 100, 300]"
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :page-sizes="[100, 200, 300, 400]"
           :background="true"
-          :pager-count="9"
-          layout="total, prev, pager, next, jumper,sizes"
-          :total="1000"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400"
       />
     </div>
   </div>
@@ -84,6 +95,8 @@ import {ref} from "vue";
 
 const currentPage = ref(1)
 const pageSize = ref(20)
+// const size = ref<ComponentSize>('default')
+
 
 const tableData = ref([
   {
@@ -149,6 +162,8 @@ const tableData = ref([
     height: @table-area-height; // 重要
     margin-top: 10px;
     border: 1px solid #EBEEF5;
+    display: flex;
+    flex-direction: column;
 
     /*列表操作区*/
     .table-area_operation {
@@ -180,31 +195,15 @@ const tableData = ref([
     }
 
     /*分页区*/
-    .pagination {
+    .table-pagination {
       height: 40px;
-      //display: flex;
-      //align-items: center;
-      //justify-items: flex-end;
-      //height: 40px;
-      .el-pagination {
-        //flex: 1;
-        ////height: 100%;
-        //height: 40px;
-        //padding-top: 2px;
-      }
-
-
-
-    }
-
-    #pagination {
-      //display: flex;
       align-items: center;
       justify-items: flex-end;
-      height: 40px;
-      //padding-top: 30px;
+      .el-pagination {
+        flex: 1;
+        height: 100%;
+      }
     }
-
 
   }
 
