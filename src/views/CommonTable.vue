@@ -123,7 +123,8 @@ const tableData = ref([
 
   // 如果row多行 不够高度 仅改这里就行
   @search-wrapper-height:55px; // 固定高度，可改动 ！！可随意变动（有最低高度后，此高度不生效），table区域自适应
-  @table-area_operation-height:50px; // 固定高度, 可改动 ！！
+  @table-area_operation-height:50px; // 固定高度, 可改动 ！！ 列表操作区域
+
   /* 父级元素的高-search-wrapper（55+2） - 自身（10+2）- 底部稍微多余点空间 */
   @table-area-height:calc(100% - (@search-wrapper-height + 2px) - 12px - 5px); // 有效
 
@@ -162,8 +163,8 @@ const tableData = ref([
     height: @table-area-height; // 重要
     margin-top: 10px;
     border: 1px solid #EBEEF5;
-    display: flex;
-    flex-direction: column;
+    //display: flex;
+    //flex-direction: column;
 
     /*列表操作区*/
     .table-area_operation {
@@ -188,7 +189,7 @@ const tableData = ref([
 
     /*列表数据区*/
     .table-area_data {
-      height: calc(@table-area-height - 11px);
+      height: calc(@table-area-height - 11px - 10px);
       .el-table {
         height: 100%;
       }
@@ -196,11 +197,12 @@ const tableData = ref([
 
     /*分页区*/
     .table-pagination {
-      height: 40px;
+      height: 45px;
       align-items: center;
       justify-items: flex-end;
+      flex-shrink: 0; // 防止父类高度压缩
       .el-pagination {
-        flex: 1;
+        //flex: 1;
         height: 100%;
       }
     }
