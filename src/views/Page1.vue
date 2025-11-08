@@ -1,94 +1,83 @@
 <template>
-  <div class="app-container">
-    <div id="search_area">
-      <el-form label-width="70px">
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <el-form-item label="关键字">
-              <el-input placeholder="请输入关键字" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="操作时间">
-              <el-date-picker
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  type="daterange"
-                  range-separator="至"
-              />
-            </el-form-item>
-          </el-col>
-          <!--:push=6 表示向右边移动6个栅栏-->
-          <el-col :span="6" class="btn-area" :push="6">
-            <div class="btn-wrapper">
-              <el-button type="primary" @click="">
-                <el-icon><Search /></el-icon>
-                搜索
-              </el-button>
-              <el-button @click="">
-                <el-icon><Refresh /></el-icon>
-                重置
-              </el-button>
-            </div>
-          </el-col>
-        </el-row>
-      </el-form>
+  <div class="search-area">
+    <el-form label-width="70px" >
+      <!--5+7+6+6 每个col占据4-->
+      <el-row :gutter="10" >
+        <el-col :span="5" >
+          <el-form-item label="关键字">
+            <el-input placeholder="请输入关键字" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="7" >
+          <el-form-item label="操作时间">
+            <el-date-picker
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                type="daterange"
+                range-separator="至"
+            />
+          </el-form-item>
+        </el-col>
+        <!--:push=6 表示向右边移动6个栅栏-->
+        <el-col :span="12" class="btn-col" >
+          <div class="btn-wrapper">
+            <el-button type="primary" @click="">
+              <el-icon><Search /></el-icon>
+              搜索
+            </el-button>
+            <el-button @click="">
+              <el-icon><Refresh /></el-icon>
+              重置
+            </el-button>
+          </div>
+        </el-col>
+      </el-row>
+    </el-form>
+  </div>
+  <div class="table-area">
+    <!--列表操作-->
+    <div class="table-area_operation">
+      <el-button type="success" >
+        <el-icon><Plus /></el-icon>新建
+      </el-button>
+      <el-button type="danger" >
+        <el-icon><Delete /></el-icon>删除
+      </el-button>
     </div>
-
-    <div id="table_main">
-      <div id="operation_area">
-        <el-row>
-          <el-col :span="24">
-            <el-button type="success" >
-              <el-icon><Plus /></el-icon>新建
-            </el-button>
-            <el-button type="danger" >
-              <el-icon><Delete /></el-icon>删除
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
-      <div id="data_area">
-        <el-table
-            stripe
-            :data="tableData"
-            :height="tableHeight"
-        >
-          <el-table-column fixed prop="date" label="Date" width="150" />
-          <el-table-column prop="name" label="Name" width="120" />
-          <el-table-column prop="state" label="State" width="120" />
-          <el-table-column prop="city" label="City" width="320" />
-          <el-table-column prop="address" label="Address" width="600" />
-          <el-table-column prop="zip" label="Zip" />
-        </el-table>
-      </div>
-      <div id="pagination">
-        <el-pagination
-            v-model:current-page="currentPage"
-            v-model:page-size="pageSize"
-            :page-sizes="[20, 50, 100, 300]"
-            :background="true"
-            :pager-count="9"
-            layout="total, prev, pager, next, jumper,sizes"
-            :total="1000"
-        />
-      </div>
+    <!--列表数据-->
+    <div class="table-area_data">
+      <el-table
+          stripe
+          :data="tableData">
+        <el-table-column fixed prop="date" label="Date" width="150" />
+        <el-table-column prop="name" label="Name" width="120" />
+        <el-table-column prop="state" label="State" width="120" />
+        <el-table-column prop="city" label="City" width="320" />
+        <el-table-column prop="address" label="Address" width="600" />
+        <el-table-column prop="zip" label="Zip" />
+      </el-table>
+    </div>
+    <!--分页-->
+    <div class="table-pagination" >
+      <el-pagination
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :page-sizes="[20, 50, 100, 300]"
+          :background="true"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400"/>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import {ref} from "vue";
 
-
-// 大量数据
 const currentPage = ref(1)
 const pageSize = ref(20)
+// const size = ref<ComponentSize>('default')
 
-const dateRange = ref([])
-const tableHeight = ref(400) // 初始高度
 
-// 模拟表格数据
 const tableData = ref([
   {
     date: '2016-05-03',
@@ -99,7 +88,7 @@ const tableData = ref([
     zip: 'CA 90036'
   },
   // 可以添加更多数据来测试滚动条
-  ...Array.from({ length: 20 }, (_, index) => ({
+  ...Array.from({ length: 30 }, (_, index) => ({
     date: `2016-05-${String(index + 1).padStart(2, '0')}`,
     name: `User${index + 1}`,
     state: 'California',
@@ -108,135 +97,83 @@ const tableData = ref([
     zip: 'CA 90036'
   }))
 ])
-
-// 计算表格高度
-const calculateTableHeight = () => {
-  nextTick(() => {
-    const windowHeight = window.innerHeight
-    const searchArea = document.getElementById('search_area')
-    const operationArea = document.getElementById('operation_area')
-    const tableMain = document.getElementById('table_main')
-    const pagination = document.getElementById('pagination')
-
-    if (searchArea && operationArea && tableMain) {
-      const searchHeight = searchArea.offsetHeight
-      const operationHeight = operationArea.offsetHeight
-      const paginationHeight = pagination.offsetHeight;
-      const tableMainTop = tableMain.getBoundingClientRect().top
-      const margin = 20 // 预留边距
-
-      tableHeight.value = windowHeight - tableMainTop - operationHeight - paginationHeight- margin
-    }
-  })
-}
-
-onMounted(() => {
-  calculateTableHeight()
-  window.addEventListener('resize', calculateTableHeight)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', calculateTableHeight)
-})
 </script>
 
 <style lang="less" scoped>
-// 定义高度变量
-@search-area-height: 55px;          // 搜索区域高度
-@search-area-margin-top: 5px;       // 搜索区域上边距
-@operation-area-height: 30px;       // 操作区域高度
-@table-main-margin-top: 10px;       // 表格主区域上边距
-@common-padding: 10px;              // 通用内边距
-@border-color: #EBEEF5;             // 边框颜色
 
-.app-container {
+// 如果row多行 不够高度 仅改这里就行
+@search-wrapper-height:55px; // 固定高度，可改动 ！！可随意变动（有最低高度后，此高度不生效），table区域自适应
+@table-area_operation-height:50px; // 固定高度, 可改动 ！！ 列表操作区域
+// table 区域高度 = 父级元素的高-search-wrapper（55+2） - 自身（10+2）- 底部稍微多余点空间
+@table-area-height:calc(100% - (@search-wrapper-height + 2px) - 12px - 5px); //
+
+.search-area {
+  height: @search-wrapper-height;
+  border: 1px solid #EBEEF5;
   display: flex;
-  flex-direction: column;
-  #search_area {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    height: @search-area-height;
-    width: 100%;
-    flex-shrink: 0;
-    //margin-top: @search-area-margin-top;
-    border: 1px solid @border-color;
-
-    .el-form {
-      height: 100%;
-      width: 100%;
-      padding: 0 @common-padding;
-
-
-      // 兼容el-row的居中问题
-      ::v-deep(.el-row) {
-        height: 100%;
-        display: flex;
-        align-items: center;
-      }
-
-      ::v-deep(.el-form-item) {
-        margin-bottom: 0;
-        height: 100%;
-        display: flex;
-        align-items: center;
-      }
-
-
-      // 搜索按钮
-      .btn-area {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        height: 100%;
-
-        .btn-wrapper {
-          display: flex;
+  align-items: center;
+  // 处理el-row的居中问题
+  .el-form {
+    flex: 1;
+    .el-row{
+      padding: 5px 0 5px 0;
+      .el-col{
+        .el-form-item {
+          margin: 0;
         }
+      }
+    }
+    // 搜索按钮的列
+    .btn-col {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      .btn-wrapper {
+        padding-right: 10px;
       }
     }
   }
 
-  #table_main {
-    margin-top: @table-main-margin-top;
-    border: 1px solid @border-color;
+
+}
+
+.table-area {
+  display: flex;
+  flex-direction: column;
+  height: @table-area-height; // 重要
+  margin-top: 10px;
+  border: 1px solid #EBEEF5;
+
+  /*列表操作区*/
+  .table-area_operation {
+    height: @table-area_operation-height;
+    flex-shrink: 0; /* 禁止高度压缩 */
+    padding: 0 10px; // 内边距
     display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    margin-bottom: 10px;
+    align-items: center;
+    //line-height: @table-area_operation-height; // 也可以上下居中，使用单行文本
 
-    #operation_area {
-      height: @operation-area-height;
-      flex-shrink: 0;
-      padding: @common-padding;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid @border-color;
+  }
+
+  /*列表数据区*/
+  .table-area_data {
+    flex: 1; // 占据上下位置的剩余部分
+    overflow: hidden; // 主要是限制el-table的自动溢出
+    .el-table {
+      height: 100%;
     }
+  }
 
-    #data_area {
-      flex: 1;
-      //min-height: 0;
-      //
-      //::v-deep(.el-table) {
-      //  height: 100%;
-      //
-      //  .el-table__header-wrapper {
-      //    position: sticky;
-      //    top: 0;
-      //    z-index: 1;
-      //  }
-      //}
-    }
 
-    #pagination {
-      //display: flex;
-      align-items: center;
-      justify-items: flex-end;
-      height: 40px;
+  /*分页区*/
+  .table-pagination {
+    height: 45px;
+    line-height: 45px; // 单个行，不使用flex也可以上下居中
+    .el-pagination{
+      float: right;
     }
   }
 
 }
+
 </style>
