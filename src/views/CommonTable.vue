@@ -71,7 +71,7 @@
 
 <script setup>
 import {ref} from "vue";
-
+import SimpleBar from 'simplebar';
 const currentPage = ref(1)
 const pageSize = ref(20)
 // const size = ref<ComponentSize>('default')
@@ -173,5 +173,4 @@ const tableData = ref([
   }
 
 }
-
 </style>
