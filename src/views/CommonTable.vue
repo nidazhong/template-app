@@ -20,7 +20,6 @@
         </el-col>
         <!--:push=6 表示向右边移动6个栅栏-->
         <el-col :span="12" class="btn-col" >
-          <div class="btn-wrapper">
             <el-button type="primary" @click="">
               <el-icon><Search /></el-icon>
               搜索
@@ -29,7 +28,6 @@
               <el-icon><Refresh /></el-icon>
               重置
             </el-button>
-          </div>
         </el-col>
       </el-row>
     </el-form>
@@ -128,8 +126,8 @@ const tableData = ref([
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      .btn-wrapper {
-        padding-right: 10px;
+      .el-button:last-child  {
+        margin-right: 10px;
       }
     }
   }
