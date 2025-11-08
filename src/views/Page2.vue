@@ -53,11 +53,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/*.simplebar-container {*/
-/*  max-height: 400px; !* 设置容器的最大高度 *!*/
-/*  height: 400px;     !* 确保容器有明确的高度 *!*/
-/*}*/
-
 .el-table {
   /* 确保表格能触发滚动 */
   height: 100%;

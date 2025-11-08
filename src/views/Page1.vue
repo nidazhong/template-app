@@ -43,7 +43,9 @@
       </el-button>
     </div>
     <!--列表数据-->
-    <div class="table-area_data">
+    <div class="table-area_data"  >
+      <!-- 使用 SimpleBar 包裹 el-table -->
+      <Simplebar  ref="sbRef" class="simplebar-content">
       <el-table
           stripe
           :data="tableData">
@@ -54,6 +56,7 @@
         <el-table-column prop="address" label="Address" width="600" />
         <el-table-column prop="zip" label="Zip" />
       </el-table>
+        </Simplebar>
     </div>
     <!--分页-->
     <div class="table-pagination" >
@@ -68,13 +71,12 @@
   </div>
 </template>
 
-<script setup>
-import {ref} from "vue";
+<script setup lang="ts">
+import {onMounted, ref} from 'vue';
+import Simplebar from 'simplebar-vue';
 
 const currentPage = ref(1)
 const pageSize = ref(20)
-// const size = ref<ComponentSize>('default')
-
 
 const tableData = ref([
   {
@@ -95,9 +97,20 @@ const tableData = ref([
     zip: 'CA 90036'
   }))
 ])
+
+
+
 </script>
 
 <style lang="less" scoped>
+
+/*滑块*/
+/deep/ .simplebar-scrollbar::before {
+  background-color: #3964fe;
+  border-radius: 4px;
+  width: 6px;
+}
+
 
 // 如果row多行 不够高度 仅改这里就行
 @search-wrapper-height:55px; // 固定高度，可改动 ！！可随意变动（有最低高度后，此高度不生效），table区域自适应
@@ -156,12 +169,14 @@ const tableData = ref([
   /*列表数据区*/
   .table-area_data {
     flex: 1; // 占据上下位置的剩余部分
-    overflow: hidden; // 主要是限制el-table的自动溢出
-    .el-table {
+    overflow: hidden;
+    .simplebar-content {
       height: 100%;
+      .el-table {
+        //min-width: 1500px // 只有加上这个水平滚动条才能出现
+      }
     }
   }
-
 
   /*分页区*/
   .table-pagination {

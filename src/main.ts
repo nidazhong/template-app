@@ -14,6 +14,8 @@ import {addDynamicFLatRoutes} from "@/router/index.js";
 import 'simplebar/dist/simplebar.min.css';
 
 
+
+
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
