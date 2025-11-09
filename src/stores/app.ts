@@ -56,6 +56,8 @@ export const useAppStore = defineStore('app', {
         clearPersistedData() {
             localStorage.removeItem("token")
             localStorage.removeItem('app-store')
+            // 只保留第一个标签
+            this.tagsData = [ {id: "1", path: '/home', name: '首页',}]
         },
 
     },

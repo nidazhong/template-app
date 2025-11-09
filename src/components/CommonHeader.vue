@@ -59,6 +59,7 @@ const doClick =  async (command) => {
     ElMessage.success('已退出')
     // 清除动态路由
     removeDynamicRoutes()
+    // 清除标签tag
     // 跳转登录页面
     router.push("/login")
   }

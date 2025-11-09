@@ -1,3 +1,8 @@
+## Project Structure
+
+- Vue3 + ts + Vite
+- ElementPlus
+
 ## Project Setup
 ```
 npm install
