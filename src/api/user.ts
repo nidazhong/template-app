@@ -1,4 +1,4 @@
-// src/api/user.js
+// src/api/userData.js
 import request from '@/utils/request'; // 导入封装好的 axios 实例
 
 // 获取用户信息
