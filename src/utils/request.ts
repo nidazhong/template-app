@@ -1,9 +1,6 @@
-// src/utils/request.js
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
-// import { useAppStore } from '@/stores/app'
 
-// const appStore = useAppStore()
 
 // 创建 axios 实例
 const service = axios.create({
