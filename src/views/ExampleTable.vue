@@ -72,7 +72,7 @@
 
 <script setup>
 import {ref} from "vue";
-import {getUserList} from "@/api/exampleApi"
+import exampleApi from "@/api/exampleApi"
 
 const state = ref(
     {
@@ -86,7 +86,7 @@ const state = ref(
 // 直接在 setup 中执行，相当于 created
 const fetchData = async () => {
   // 获取数据的逻辑
-  state.value.tableData = await getUserList()
+  state.value.tableData = await exampleApi.getUserList()
 }
 
 // 立即执行，相当于 created
