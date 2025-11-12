@@ -6,8 +6,9 @@
   >
     <!--这一个el-col是第一列的内容-->
     <el-col
-        :span="6"
-        style="margin-top:20px"
+        class="left-col"
+        :span="8"
+        style="margin-top:10px"
     >
       <!--第一列有两个卡片，这个是第一个-->
       <el-card shadow="hover">
@@ -37,10 +38,10 @@
         <!--表格的数据和列的数据，等下定义-->
         <el-table :data="tableData">
           <el-table-column
-              v-for="item,key in tableLabel"
-              :key="item"
+              v-for="(label, key) in tableLabel"
+              :key="key"
               :prop="key"
-              :label="item"
+              :label="label"
           >
           </el-table-column>
         </el-table>
@@ -49,12 +50,12 @@
 
     <!--第二列-->
     <el-col
-        :span="18"
-        style="margin-top: 20px"
-        class="main"
+        :span="16"
+        style="margin-top: 10px"
+        class="right-col"
     >
       <!--订单销售情况-->
-      <div class="num">
+      <div class="orderNum">
         <!--会有多个el-card，countData等下定义-->
         <el-card
             :body-style="{display:'flex',padding:0}"
@@ -73,25 +74,19 @@
         </el-card>
       </div>
       <!--下面是图表数据，每一个el-card都代表一个图表-->
-      <el-card style="height:280px">
-        <div
-            ref="echart"
-            style="height: 280px;;"
-        >
+      <el-card class="zigzagLine">
+        <!--el-card和里面的div都要有高度-->
+        <div class="zigzagLine"  ref="echart">
         </div>
       </el-card>
-
-      <div class="graph">
-        <el-card style="height: 260px">
-          <div
-              ref="userechart"
-              style="height: 240px"
-          ></div>
+      <div class="graph" >
+        <el-card  class="columnar-pia">
+          <div ref="userechart" class="columnar-pia"></div>
         </el-card>
-        <el-card style="height: 260px">
+        <el-card  class="columnar-pia">
           <div
               ref="videoechart"
-              style="height: 240px"
+              class="columnar-pia"
           ></div>
         </el-card>
       </div>
@@ -292,16 +287,20 @@ onMounted(() => {
   }
 }
 
-.main{
-  .num {
+
+.right-col{
+  .orderNum {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+
     .el-card {
+      // 高度由内容撑开
       width: 32%;
       margin-bottom: 20px;
       border-radius: 5px;
     }
+
     .details {
       margin-left: 10px;
       .num {
@@ -321,12 +320,22 @@ onMounted(() => {
       text-align: center;
     }
   }
+
+  .zigzagLine {
+    height: 280px;
+  }
+
+
   .graph{
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
     .el-card{
       width: 48%;
+    }
+
+    .columnar-pia {
+      height: 240px;
     }
 
   }
