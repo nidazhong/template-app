@@ -302,13 +302,15 @@ onMounted(() => {
     }
 
     .details {
-      margin-left: 10px;
+      width: 45%; // 故意不填充 68% ，意思就是不想让它居中
+      text-align: center;
       .num {
-        font-size: 30px;
+        font-size: 33px;
+        font-weight: 450;
         line-height: 50px;
       }
       .txt {
-        font-size: 12px;
+        font-size: 13px;
         color: #999;
       }
     }
