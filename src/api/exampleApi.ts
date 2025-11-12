@@ -2,6 +2,7 @@ import request from '@/utils/request'; // 导入封装好的 axios 实例
 
 
 export default {
+    // 需要修改从request->mock
     getUserList() {
         return [{
             date: '2016-05-03',

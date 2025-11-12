@@ -81,7 +81,7 @@ import { ref } from 'vue'
 import CaptchaCode from 'vue-captcha-code' // 模拟图形验证码，实际后端获取
 import { ElMessage } from 'element-plus'
 import router, {addDynamicFLatRoutes} from "@/router/index.js";
-import { getUserInfo, login } from '@/api/user'; // 导入 API 方法
+import api from '@/api/userApi'; // 导入 API 方法
 import { useAppStore } from '@/stores/app'
 
 
@@ -159,7 +159,7 @@ const doLogin = async () =>{
 
     // 执行登录Api请求，获取token存放，跳转/home
     // 从定义的data中拿数据，而不是表单引用
-    const response = await login(data.value.user) // api/userData.ts
+    const response = await api.login(data.value.user) // api/userData.ts
     console.log(response.data.userInfo.username + " 已登录...")
     // 导航守卫
     data.loading = true
@@ -173,6 +173,7 @@ const doLogin = async () =>{
     ElMessage.success('登录成功')
     // 跳转首页
     router.push("/home")
+
   } catch (error) {
     if (error instanceof Error) {
       ElMessage.error(error.message || '登录失败')

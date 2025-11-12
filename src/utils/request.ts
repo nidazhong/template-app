@@ -1,12 +1,16 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 
+// 开发环境判断
+const isDev = import.meta.env.DEV;
 
 // 创建 axios 实例
 const service = axios.create({
-    baseURL: import.meta.env.VUE_APP_BASE_API, // 使用环境变量
+    baseURL: isDev ? '' : import.meta.env.VITE_APP_BASE_API, // 使用环境变量,注意是VITE开头
     timeout: 10000, // 请求超时时间
 });
+
+
 
 // 请求拦截器
 service.interceptors.request.use(
@@ -23,10 +27,10 @@ service.interceptors.request.use(
         }
 
         // 添加时间戳防止缓存
-        if (config.method === 'get') {
+        if (config.method === 'get' && !isDev) {
             config.params = {
                 ...config.params,
-                _t: Date.now()
+                _t: Date.now()  // 参数后会加上_t，如果Mock没有处理将拦截不到
             };
         }
 
@@ -126,4 +130,5 @@ export const http = {
     }
 };
 
+// 默认导出的是 axios 实例
 export default service;
